@@ -1,27 +1,33 @@
 package Service;
 
-import Shipping.AirDelivery;
 import Shipping.ShippingMethod;
-import Shipping.TruckDelivery;
 
-
+import java.time.Clock;
 import java.time.LocalDate;
 
 public class OrderService {
 
+    private final Clock clock;
+    private final ShippingMethod weekdayMethod;
+    private final ShippingMethod weekendMethod;
+
+    public OrderService(Clock clock,
+                        ShippingMethod weekdayMethod,
+                        ShippingMethod weekendMethod) {
+        this.clock = clock;
+        this.weekdayMethod = weekdayMethod;
+        this.weekendMethod = weekendMethod;
+    }
+
     public double createOrder(double weight) {
-        ShippingMethod method;
+        LocalDate today = LocalDate.now(clock);
 
-        if (LocalDate.now().getDayOfWeek().getValue() >= 6) {
-            method = new AirDelivery();
-        } else {
-            method = new TruckDelivery();
-        }
+        ShippingMethod method =
+                (today.getDayOfWeek().getValue() >= 6)
+                        ? weekendMethod
+                        : weekdayMethod;
 
-        double price = method.calculateCost(weight);
-
-        System.out.println("Order created, price = " + price);
-
-        return price;
+        return method.calculateCost(weight);
     }
 }
+
