@@ -10,6 +10,11 @@ class AirDeliveryTest {
         AirDelivery air = new AirDelivery();
         assertEquals(425, air.calculateCost(5));
     }
+    @Test
+    void shouldReturnBasePriceForZeroWeight() {
+        AirDelivery air = new AirDelivery();
+        assertEquals(300, air.calculateCost(0));
+    }
 
     @Test
     void shouldCalculatePriceForDecimalWeight(){
